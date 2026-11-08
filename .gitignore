@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 .env
 certs/*.pem
+galaxy-voice-to-codex-qr.png

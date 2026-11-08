@@ -1,5 +1,5 @@
 from __future__ import annotations
-import os, secrets, socket
+import os, secrets, socket, webbrowser
 from pathlib import Path
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
@@ -34,8 +34,20 @@ def local_ip():
     try: s.connect(('8.8.8.8',80)); return s.getsockname()[0]
     except OSError: return socket.gethostbyname(socket.gethostname())
     finally: s.close()
+def make_qr(url):
+    try:
+        import qrcode
+        path=ROOT/'galaxy-voice-to-codex-qr.png'
+        qrcode.make(url).save(path)
+        print(f'QR image: {path}')
+        try: os.startfile(path)
+        except OSError: pass
+    except Exception as e:
+        print(f'QR generation skipped: {e}')
 if __name__=='__main__':
-    print(f'PIN: {PIN}\nHTTP: http://{local_ip()}:{os.getenv("HTTP_PORT","8765")}')
+    url=f'http://{local_ip()}:{os.getenv("HTTP_PORT","8765")}'
+    print(f'PIN: {PIN}\nHTTP: {url}')
+    make_qr(url)
     host=os.getenv('HOST','0.0.0.0'); http_port=int(os.getenv('HTTP_PORT','8765'))
     if (ROOT/'certs'/'cert.pem').exists() and (ROOT/'certs'/'key.pem').exists():
         threading.Thread(target=lambda: uvicorn.run(app,host=host,port=int(os.getenv('HTTPS_PORT','8766')),ssl_certfile=str(ROOT/'certs'/'cert.pem'),ssl_keyfile=str(ROOT/'certs'/'key.pem')),daemon=True).start()

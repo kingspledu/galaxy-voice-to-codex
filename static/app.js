@@ -8,3 +8,5 @@ $('#passage')?.addEventListener('input',run);$('#printPdf')?.addEventListener('c
 $('#fontSize')?.addEventListener('input',e=>{if(preview.contentDocument)preview.contentDocument.body.style.fontSize=e.target.value+'px'});$('#letterSpacing')?.addEventListener('input',e=>{if(preview.contentDocument)preview.contentDocument.body.style.letterSpacing=e.target.value+'px'});$('#lineHeight')?.addEventListener('input',e=>{if(preview.contentDocument)preview.contentDocument.body.style.lineHeight=e.target.value});
 
 
+
+$('#copyPrompt')?.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(prompt.value);const s=$('#copyState');if(s)s.textContent='복사됨 ✓'}catch(e){const ta=document.createElement('textarea');ta.value=prompt.value;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();const s=$('#copyState');if(s)s.textContent='복사됨 ✓'}});

@@ -38,3 +38,4 @@ $('#passageFile').addEventListener('change',async()=>{const f=$('#passageFile').
 
 function updateGlow(){const ready=!!(prompt.value&&prompt.value.length>40);['#downloadPrompt','#attachmentPrompt','#copyPrompt'].forEach(sel=>{const el=document.querySelector(sel);if(el){el.disabled=!ready;el.classList.toggle('ready-glow',ready)}});const st=document.querySelector('#promptState');if(st)st.textContent=ready?'프롬프트 준비 완료 ✓':'지문 입력 대기 중'}
 ['passage','targetRange'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>setTimeout(updateGlow,0)));document.getElementById('passageFile')?.addEventListener('change',()=>setTimeout(updateGlow,50));updateGlow();
+

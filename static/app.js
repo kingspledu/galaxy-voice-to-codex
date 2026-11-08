@@ -13,6 +13,7 @@
     examCopyState: $('#examCopyState'),
     prompt: $('#prompt'),
     copyPrompt: $('#copyPrompt'),
+    downloadPrompt: $('#downloadPrompt'),
     copyState: $('#copyState'),
     htmlInput: $('#htmlInput'),
     preview: $('#preview'),
@@ -61,6 +62,15 @@
     catch { const ta = document.createElement('textarea'); ta.value = value; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
     setCopyState(stateNode, '복사됨 ✓');
   };
+  const downloadPromptPackage = () => {
+    if (!els.passage?.value.trim()) return;
+    const file = els.passageFile?.files?.[0];
+    const base = (file?.name || 'passage').replace(/\.(md|txt)$/i, '');
+    const content = `${els.prompt?.value || promptText()}\n\n--- ATTACHED SOURCE MD ---\n${els.passage.value.trim()}\n--- END SOURCE MD ---\n`;
+    const url = URL.createObjectURL(new Blob([content], { type: 'text/markdown;charset=utf-8' }));
+    const link = document.createElement('a'); link.href = url; link.download = `${base}-gemini-prompt.md`; link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 500);
+  };
 
   const renderPreview = () => {
     if (!els.preview) return;
@@ -85,6 +95,7 @@
     if (!els.passage?.value.trim()) { if (els.prompt) els.prompt.value = ''; if (els.copyPrompt) els.copyPrompt.disabled = true; return; }
     els.prompt.value = promptText();
     if (els.copyPrompt) els.copyPrompt.disabled = false;
+    if (els.downloadPrompt) els.downloadPrompt.disabled = false;
   };
 
   els.passageFile?.addEventListener('change', async (event) => {
@@ -96,6 +107,7 @@
   els.passage?.addEventListener('input', buildPassagePrompt);
   els.buildExamPrompt?.addEventListener('click', () => { els.examPrompt.value = examPromptText(); els.copyExamPrompt.disabled = false; });
   els.copyPrompt?.addEventListener('click', () => copy(els.prompt.value, els.copyState));
+  els.downloadPrompt?.addEventListener('click', downloadPromptPackage);
   els.copyExamPrompt?.addEventListener('click', () => copy(els.examPrompt.value, els.examCopyState));
   els.htmlInput?.addEventListener('input', () => { window.clearTimeout(renderTimer); renderTimer = window.setTimeout(renderPreview, 180); });
   els.sampleHtml?.addEventListener('click', () => { els.htmlInput.value = sample; renderPreview(); });
@@ -103,7 +115,7 @@
   els.zoomIn?.addEventListener('click', () => { zoom = Math.min(1.5, +(zoom + 0.1).toFixed(2)); updateZoom(); });
   els.zoomOut?.addEventListener('click', () => { zoom = Math.max(0.6, +(zoom - 0.1).toFixed(2)); updateZoom(); });
   [els.fontSize, els.letterSpacing, els.lineHeight].forEach((input) => input?.addEventListener('input', () => { updateOutputs(); applyPreviewStyles(); }));
-  els.resetBtn?.addEventListener('click', () => { if (!window.confirm('현재 입력을 모두 지울까요?')) return; [els.passage, els.prompt, els.examPrompt, els.htmlInput].forEach((node) => { if (node) node.value = ''; }); if (els.copyPrompt) els.copyPrompt.disabled = true; if (els.copyExamPrompt) els.copyExamPrompt.disabled = true; if (els.passageFile) els.passageFile.value = ''; if (els.passageFileState) els.passageFileState.textContent = 'MD 파일을 선택하면 원문을 읽습니다.'; renderPreview(); });
+  els.resetBtn?.addEventListener('click', () => { if (!window.confirm('현재 입력을 모두 지울까요?')) return; [els.passage, els.prompt, els.examPrompt, els.htmlInput].forEach((node) => { if (node) node.value = ''; }); if (els.copyPrompt) els.copyPrompt.disabled = true; if (els.downloadPrompt) els.downloadPrompt.disabled = true; if (els.copyExamPrompt) els.copyExamPrompt.disabled = true; if (els.passageFile) els.passageFile.value = ''; if (els.passageFileState) els.passageFileState.textContent = 'MD 파일을 선택하면 원문을 읽습니다.'; renderPreview(); });
 
   updateOutputs(); updateZoom(); renderPreview();
 })();

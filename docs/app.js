@@ -13,3 +13,7 @@ $('#buildExamPrompt').onclick=buildExam;$('#targetRange').addEventListener('inpu
 
 
 
+
+// Upload/readiness UI
+function syncPromptState(){const ready=!!(prompt.value&&prompt.value.length>40&&$('#rangeConfirmed').checked);$('#downloadPrompt').disabled=!ready;$('#attachmentPrompt').disabled=!ready;$('#promptState').textContent=ready?'프롬프트 준비 완료 ✓':($('#rangeConfirmed').checked?'지문 입력 대기 중':'범위 확인 대기 중')}
+$('#passage').addEventListener('input',syncPromptState);$('#rangeConfirmed').addEventListener('change',()=>{build();syncPromptState()});$('#passageFile').addEventListener('change',async()=>{const f=$('#passageFile').files[0];if(!f)return;try{passage.value=await f.text();$('#passageFileState').textContent=`불러옴 · ${f.name} · ${passage.value.length.toLocaleString()}자`;$('#passageFileState').classList.add('ready');build();syncPromptState()}catch(e){$('#passageFileState').textContent='파일을 읽지 못했습니다.'}});syncPromptState();

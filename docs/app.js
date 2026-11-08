@@ -39,3 +39,7 @@ $('#passageFile').addEventListener('change',async()=>{const f=$('#passageFile').
 function updateGlow(){const ready=!!(prompt.value&&prompt.value.length>40);['#downloadPrompt','#attachmentPrompt','#copyPrompt'].forEach(sel=>{const el=document.querySelector(sel);if(el){el.disabled=!ready;el.classList.toggle('ready-glow',ready)}});const st=document.querySelector('#promptState');if(st)st.textContent=ready?'프롬프트 준비 완료 ✓':'지문 입력 대기 중'}
 ['passage','targetRange'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>setTimeout(updateGlow,0)));document.getElementById('passageFile')?.addEventListener('change',()=>setTimeout(updateGlow,50));updateGlow();
 
+
+// Automatic flow after markdown upload
+let autoPromptDownloadLock='';
+document.getElementById('passageFile')?.addEventListener('change',()=>{setTimeout(()=>{build();updateGlow();const value=prompt.value||'';if(value&&value.length>40){const fileName=document.getElementById('passageFile')?.files?.[0]?.name||'passage';const key=fileName+':'+value.length;if(autoPromptDownloadLock!==key){autoPromptDownloadLock=key;downloadMD(fileName.replace(/\.(md|txt)$/i,'')+'-gemini-prompt.md',value);const state=document.querySelector('#promptState');if(state)state.textContent='프롬프트 표시 및 MD 자동 다운로드 완료 ✓'}}},120)});

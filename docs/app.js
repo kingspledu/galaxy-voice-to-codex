@@ -32,3 +32,4 @@ $('#saveDraftBtn').onclick=()=>{saveDraft();$('#passageFileState').textContent='
 $('#passageFile').addEventListener('change',async()=>{const f=$('#passageFile').files[0];if(!f)return;const textValue=await f.text();const digest=await fileDigest(textValue);const history=readHistory();const duplicate=history.some(x=>x.hash===digest);if(!duplicate){history.push({hash:digest,name:f.name,bytes:f.size,savedAt:new Date().toISOString()});saveHistory(history)}passage.value=textValue;saveDraft();$('#passageFileState').textContent=duplicate?`중복 파일 · 기존 기록 1개 유지 · ${f.name}`:`불러옴 · ${f.name} · ${textValue.length.toLocaleString()}자 · 저장됨`;$('#passageFileState').classList.add('ready');build();syncPromptState()});
 
 
+

@@ -15,7 +15,7 @@ $('#buildExamPrompt').onclick=buildExam;$('#targetRange').addEventListener('inpu
 
 
 // Upload/readiness UI
-function syncPromptState(){const ready=!!(prompt.value&&prompt.value.length>40);#downloadPrompt.disabled=!ready;#attachmentPrompt.disabled=!ready;#promptState.textContent=ready?'프롬프트 준비 완료 ✓':'지문 입력 대기 중'}
+function syncPromptState(){const ready=!!(prompt.value&&prompt.value.length>40);document.querySelector("#downloadPrompt").disabled=!ready;document.querySelector("#attachmentPrompt").disabled=!ready;document.querySelector("#promptState").textContent=ready?"프롬프트 준비 완료 ✓":"지문 입력 대기 중"}
 $('#passage').addEventListener('input',syncPromptState);$('#rangeConfirmed').addEventListener('change',()=>{build();syncPromptState()});$('#passageFile').addEventListener('change',async()=>{const f=$('#passageFile').files[0];if(!f)return;try{passage.value=await f.text();$('#passageFileState').textContent=`불러옴 · ${f.name} · ${passage.value.length.toLocaleString()}자`;$('#passageFileState').classList.add('ready');build();syncPromptState()}catch(e){$('#passageFileState').textContent='파일을 읽지 못했습니다.'}});syncPromptState();
 
 // Local draft persistence
@@ -36,3 +36,5 @@ $('#passageFile').addEventListener('change',async()=>{const f=$('#passageFile').
 
 
 
+function updateGlow(){const ready=!!(prompt.value&&prompt.value.length>40);['#downloadPrompt','#attachmentPrompt','#copyPrompt'].forEach(sel=>{const el=document.querySelector(sel);if(el){el.disabled=!ready;el.classList.toggle('ready-glow',ready)}});const st=document.querySelector('#promptState');if(st)st.textContent=ready?'프롬프트 준비 완료 ✓':'지문 입력 대기 중'}
+['passage','targetRange'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>setTimeout(updateGlow,0)));document.getElementById('passageFile')?.addEventListener('change',()=>setTimeout(updateGlow,50));updateGlow();

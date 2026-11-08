@@ -25,17 +25,17 @@
       <section class="card exam-card">
         <div class="card-head"><div><span class="step">00</span><h2>시험지 범위 수집</h2></div><span class="chip">PDF → TARGET RANGE</span></div>
         <p class="hint">먼저 Gemini에 시험지 PDF를 올리고, 아래 프롬프트로 시험명·문항 범위·타깃 문항을 추출합니다. 확인 전에는 워크북을 작성하지 않습니다.</p>
-        <div class="field-row"><label>시험지 파일/제목 <input id="examPdf" placeholder="예: 2026 고2 6월 모의고사 PDF"></label><label>대상 범위 <input id="targetRange" placeholder="예: 29~33"></label></div>
+        <div class="field-row"><label>시험지 파일/제목 <input id="examPdf" placeholder="예: 2026 고2 6월 모의고사 PDF"></label><label>시험지 PDF <input id="examFile" type="file" accept=".pdf"></label><label>대상 범위 <input id="targetRange" placeholder="예: 29~33"></label></div>
         <textarea id="examPrompt" readonly placeholder="시험지 분석 프롬프트가 여기에 생성됩니다."></textarea>
         <div class="button-row"><button class="primary" id="buildExamPrompt">시험지 분석 프롬프트 만들기</button><button class="secondary" id="copyExamPrompt" disabled>프롬프트 복사</button><span class="copy-state" id="examCopyState"></span></div>
         <div class="confirm-row"><label><input type="checkbox" id="rangeConfirmed"> Gemini가 추출한 시험명과 문항 범위를 확인했습니다.</label></div>
       </section>      <div class="workspace-grid">
         <section class="card input-card">
           <div class="card-head"><div><span class="step">01</span><h2>지문 입력</h2></div><span class="chip">SOURCE TEXT</span></div>
-          <label class="field-label" for="passage">영어 읽기 지문</label>
+          <label class="field-label" for="passage">영어 읽기 지문</label><input id="passageFile" type="file" accept=".md,.txt" class="file-input">
           <textarea id="passage" placeholder="영어 지문을 붙여 넣으세요. 문단 구분과 번호가 있다면 그대로 유지합니다."></textarea>
           <div class="field-row"><label>시험/교재명 <input id="exam" placeholder="예: 2026 고2 6월 모의고사"></label><label>문항 번호 <input id="questionNo" placeholder="예: 29"></label></div>
-          <div class="button-row"><button class="primary" id="buildPrompt" disabled>프롬프트 만들기 <span>↗</span></button><button class="secondary" id="loadSample">샘플 불러오기</button></div>
+          <div class="button-row"><button class="primary" id="buildPrompt" disabled>프롬프트 만들기 <span>↗</span></button><button class="secondary" id="loadSample">샘플 불러오기</button><button class="secondary" id="downloadPrompt">MD 다운로드</button><button class="secondary" id="attachmentPrompt">MD 첨부용 프롬프트</button></div>
         </section>
 
         <section class="card prompt-card">
@@ -60,5 +60,6 @@
   <script src="app.js"></script>
 </body>
 </html>
+
 
 

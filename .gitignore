@@ -4,3 +4,10 @@ __pycache__/
 .env
 certs/*.pem
 galaxy-voice-to-codex-qr.png
+.tools/
+.gradle/
+.gradle-user-home/
+app/build/
+app/.cxx/
+*.log
+*.part

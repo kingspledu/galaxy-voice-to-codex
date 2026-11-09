@@ -1,0 +1,30 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <application android:theme="@style/AppTheme" android:label="YouTube Voice Marker" android:allowBackup="false">
+        <activity android:name=".TranscriptionSettingsActivity" android:exported="false" />
+        <activity android:name=".NoteDetailActivity" android:exported="false" />
+        <activity android:name=".overlay.CapturePopupActivity" android:exported="false" android:theme="@style/PopupTheme" android:launchMode="singleTask" android:taskAffinity="com.kuiro.youtubemarker.capture" android:excludeFromRecents="true" />
+        <service android:name=".recording.RecordingService" android:exported="false" android:foregroundServiceType="microphone" />
+        <service android:name=".overlay.FloatingButtonService" android:exported="false" android:foregroundServiceType="specialUse">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="User-enabled persistent draggable voice-note overlay button, stopped by notification or app toggle. No microphone access in this service." />
+        </service>
+        <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

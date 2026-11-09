@@ -1,0 +1,29 @@
+name: Release APK Check
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018" "cmake;3.22.1"
+      - name: Enforce free-only transcription
+        shell: bash
+        run: |
+          ! grep -RniE 'api\.groq\.com|api\.openai\.com|Authorization: Bearer|gsk_|sk-[A-Za-z0-9]' app/src
+      - run: ./gradlew assembleRelease lintRelease testReleaseUnitTest --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: youtubemarker-release-unsigned
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
